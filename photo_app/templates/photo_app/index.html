@@ -7,13 +7,15 @@
             <section class="photo">
                 <header class="photo__header">
                     <div class="photo__header-column">
-                        <img
-                            class="photo__avatar"
-                            src="{%static 'images/avatar.jpg' %}"
-                        />
+                        <a href="{% url 'profile' post.uploaded_by.username %}">
+                            <img
+                                class="photo__avatar"
+                                src="{{post.uploaded_by.profile_pic.url}}"
+                            />
+                        </a>
                     </div>
                     <div class="photo__header-column">
-                        <span class="photo__username">{{post.uploaded_by.username}}</span>
+                        <a href="{% url 'profile' post.uploaded_by.username %}"><span class="photo__username">{{post.uploaded_by.username}}</span></a>
                         <span class="photo__location">{{post.location}}</span>
                     </div>
                 </header>

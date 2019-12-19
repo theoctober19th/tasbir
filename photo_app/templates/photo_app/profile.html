@@ -31,10 +31,16 @@
                     <div class="profile__bio">
                         <span class="profile__full-name u-fat-text">{{user.display_name}}</span>
                         <p class="profile__full-bio">{{user.bio}}</p>
-                        <a href="http://serranoarevalo.com" class="profile__link u-fat-text">serranoarevalo.com</a>
+                        <a href="{{user.website}}" class="profile__link u-fat-text">{{user.website}}</a>
                     </div>
                 </div>
             </header>
+
+            {%if posts|length == 0%}
+                <h1 style="font-size:larger; font-weight:bold; text-align:center">You have not uploaded any photos</h1>
+                <br>
+                <h1 style="text-align:center">Post your first photo from <a href="{%url 'index'%}">here</a></h1>
+            {%endif%}
 
             <div class="profile__pictures">
 
@@ -58,4 +64,16 @@
             </div>
         </section>
     </main>
+{%endblock%}
+
+{%block post_footer%}
+    <div class="popUp">
+        <i class="fa fa-times fa-2x" id="closePopUp"></i>
+        <div class="popUp__container">
+            <div class="popUp__buttons">
+                <a href="{%url 'logout'%}" class="popUp__button">Log Out</a>
+                <a href="#" class="popUp__button" id="cancelPopUp">Cancel</a>
+            </div>
+        </div>
+    </div>
 {%endblock%}

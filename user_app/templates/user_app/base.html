@@ -9,32 +9,7 @@
         <link href="{%static 'css/style.css'%}" rel="stylesheet">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     </head> 
-    <body>
-        <nav class="navigation">
-            <a href="{% url 'index' %}">
-                <img 
-                    src='{%static "images/navLogo.png" %}'
-                    alt="logo"
-                    title="logo"
-                    class="navigation__logo"
-                />
-            </a>
-            <div class="navigation__search-container">
-                <i class="fa fa-search"></i>
-                <input type="text" placeholder="Search">
-            </div>
-            <div class="navigation__icons">
-                <a href="explore.html" class="navigation__link">
-                    <i class="fa fa-compass"></i>
-                </a>
-                <a href="#" class="navigation__link">
-                    <i class="fa fa-heart-o"></i>
-                </a>
-                <a href="{%url 'profile' request.session.username %}" class="navigation__link">
-                    <i class="fa fa-user-o"></i>
-                </a>
-            </div>
-        </nav>
+    <body class="no-padding">
 
         {%block main_content%}
             WRITE YOUR MAIN BLOCK HERE
@@ -57,19 +32,10 @@
             </nav>
             <span class="footer__copyright">© 2020 Tasbir</span>
         </footer>
-
-        {%block post_footer%}
-
-        {%endblock%}
-
         <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous">
-        </script>
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
         <script src="{%static 'js/app.js'%}"></script>
-
-        {% block javascript %}
-        {%endblock%}
     </body>
 </html>

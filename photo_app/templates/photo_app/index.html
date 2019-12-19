@@ -34,7 +34,9 @@
                             <i class="fa fa-comment-o fa-lg"></i>
                         </span>
                     </div>
-                    <span class="photo__likes">{{post.likes}} likes</span>
+                    {% if post.likes > 0 %}
+                        <span class="photo__likes">{{post.likes}} like{{ post.likes|pluralize:"s" }}</span>
+                    {%endif%}
                     <ul class="photo__comments">
                         <li class="photo__comment">
                             <span class="photo__comment-author">{{post.uploaded_by.username}}</span>When your shades match the color of your sweater.
@@ -53,4 +55,22 @@
         {%endfor%}
 
     </main>
+{%endblock%}
+
+{%block javascript %}
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'ajax.likephoto' %}",
+            data: 'theoctober19th',
+            success: function(response){
+                console.log(response)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        })
+    })
+</script>
 {%endblock%}

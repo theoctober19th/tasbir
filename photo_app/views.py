@@ -1,14 +1,18 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from .models import PhotoModel
 from user_app.models import UserModel
+from django.views.decorators.csrf import csrf_exempt
 
 from faker import Faker
 
 # Create your views here.
 def index(request):
-    posts = PhotoModel.objects.order_by('-timestamp')
-    return render(request, 'photo_app/index.html', {'posts':posts} )
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        posts = PhotoModel.objects.order_by('-timestamp')
+        return render(request, 'photo_app/index.html', {'posts':posts} )
 
 def profile(request, username):
     user = UserModel.objects.filter(username=username).first()
@@ -22,6 +26,11 @@ def profile(request, username):
         'posts': posts
     }
     return render(request, 'photo_app/profile.html', context)
+
+@csrf_exempt
+def likephoto(request):
+    print('server side ajax function called')
+    return JsonResponse({'success': 'true'})
 
 def faker(request):
     fake = Faker()

@@ -59,4 +59,8 @@ def faker(request):
                             uploaded_by=user)
             post.save(force_insert=True)
 
+            for k in range(3):
+                text = fake.sentence()
+                comment = CommentModel(commented_by=user, text=text, parent_post=post)
+                comment.save(force_insert=True)
     return HttpResponse('Fake Data created successfully')

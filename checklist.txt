@@ -1,0 +1,55 @@
+Heroku Checklist
+
+1. Create a .gitignore file, and commit changes to the local git repository.
+
+2. Install Heroku CLI for your machine from: https://devcenter.heroku.com/articles/heroku-cli#download-and-install
+
+3. Create a Heroku account.
+
+4. heroku login
+
+5. heroku create app_name
+
+6. Add Heroku site to ALLOWED_HOSTS.
+
+7. Create Procfile with this as content:
+web: gunicorn project_name.wsgi
+
+8. pip install gunicorn
+
+9. pip install dj_database_url
+
+10. pip freeze -l > requirements.txt
+
+11. Create runtime.txt file with content:
+python-3.8.0
+
+12. Define STATIC_ROOT in settings.py
+
+13. python manage.py collectstatic
+
+14. Add PostgreSQL (In settings.py)
+if 'DATABASE_URL' in os.environ: #means heroku 
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config()}
+
+
+15. Add psycopg2 to requirements.txt
+
+16. Commit all changes.
+
+17. git push heroku master
+
+18. heroku ps:scale web=1
+
+19. heroku run bash
+python manage.py makemigrations
+python manage.py migrate
+
+20. heroku open (This Opens the Website)
+
+21. set DEBUG = False in settings.py
+
+23. Commit, and push to heroku.
+
+Congratulations, deployment complete!

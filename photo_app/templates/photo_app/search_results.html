@@ -1,0 +1,46 @@
+{% extends 'photo_app/base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block main_content %}
+    <main class="explore">
+
+        {%if profiles|length == 0%}
+            <h1 style="font-size:large; font-weight:bold; text-align:center">Search query '{{query}}' doesn't match any results</h1>
+            <br>
+            <h1 style="text-align:center">Try changing your query and searching again.</h1>
+        {% else %}
+
+        <h1 style="font-size:larger; font-weight:bold; text-align:center; margin-bottom:20px;">Search Results for '{{query}}'</h1>
+
+        <section class="people">
+            <ul class="people__list">
+                {% for user in profiles %}
+                    <li class="people__person">
+                        <div class="people__column">
+                            <div class="people__avatar-container">
+                                <a href="{% url 'profile' user.username %}">
+                                    <img 
+                                        src="{{user.profile_pic.url}}"
+                                        class="people__avatar"
+                                    />
+                                </a>
+                            </div>
+                            <div class="people__info">
+                                <a href="{% url 'profile' user.username %}"><span class="people__username">{{user.username}}</span></a>
+                                <span class="people__full-name">{{user.display_name}}</span>
+                            </div>
+                        </div>
+                        <div class="people__column_a">
+                            <a href="#">Follow</a>
+                        </div>
+                    </li>
+                {%endfor%}
+                
+            </ul>
+        </section>
+        {%endif%}
+    </main>
+{% endblock %}

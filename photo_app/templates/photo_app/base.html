@@ -21,15 +21,20 @@
             </a>
             <div class="navigation__search-container">
                 <i class="fa fa-search"></i>
-                <input type="text" placeholder="Search">
+                <form action="{% url 'search' %}" method="GET">
+                    <input id="search-bar" type="text" placeholder="Search" value="" name="q">
+                </form>
             </div>
             <div class="navigation__icons">
-                <a href="explore.html" class="navigation__link">
+                <a href="{% url 'explore' %}" class="navigation__link">
+                    <i class="fa fa-plus"></i>
+                </a>
+                <a href="{% url 'explore' %}" class="navigation__link">
                     <i class="fa fa-compass"></i>
                 </a>
-                <a href="#" class="navigation__link">
+                <!-- <a href="#" class="navigation__link">
                     <i class="fa fa-heart-o"></i>
-                </a>
+                </a> -->
                 <a href="{%url 'profile' request.session.username %}" class="navigation__link">
                     <i class="fa fa-user-o"></i>
                 </a>
@@ -71,5 +76,18 @@
 
         {% block javascript %}
         {%endblock%}
+
+        <script>
+            searchbar = $('#search-bar')
+
+            searchbar.keyup(function(e){
+                if(e.keyCode == 13){
+                    query = searchbar.val()
+                    url = ""
+                    console.log(url)
+                }
+            })
+
+        </script>
     </body>
 </html>

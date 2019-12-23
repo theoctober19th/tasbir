@@ -30,6 +30,11 @@
     align-items:center; 
 }
 
+.people__column_a{
+    display: flex;
+    align-items:center; 
+}
+
 .people__info{
     margin-left:15px;
 }
@@ -49,7 +54,7 @@
     color:#999;
 }
 
-.people__column a{
+.people__column_a a{
     background-color: #3897f0;
     padding:7px 13px;
     color:white;

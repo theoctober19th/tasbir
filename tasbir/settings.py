@@ -26,10 +26,7 @@ SECRET_KEY = '(kqfs39*pjy^3bma6okujqlp(n!h$#ht6*w1+t%*t%5tq+(cir'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'tasbir.herokuapp.com',
-    'theoctober19th.pythonanywhere.com',
-    'localhost',
-    '127.0.0.1'
+    '*'
 ]
 
 

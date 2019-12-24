@@ -20,45 +20,63 @@
                     class="login__logo"
                 />
                 <!-- x   -->
-                <form method="POST" class="login__form">
+                <form id="register-form" method="POST" class="login__form">
                     {%csrf_token%}
                     <div class="login__input-container">
-                        <input 
-                            type="text"
-                            name="username"
-                            placeholder="Username"
-                            required
-                            class="login__input"
-                        />
+                       {{ form.display_name }}
+                    </div>
+                    <div id="display-name-error" class="custom-error">
+                        {{form.display_name.errors}}
                     </div>
                     <div class="login__input-container">
+                        {{form.email}}
+                    </div>
+                    <div id="display-name-error" class="custom-error">
+                        {{form.email.errors}}
+                    </div>
+                    <div class="login__input-container">
+                        {{form.username}}
+                    </div>
+                    <div id="display-name-error" class="custom-error">
+                        {{form.username.errors}}
+                    </div>
+                    <div class="login__input-container">
+                        {{form.password}}
+                    </div>
+                    <div id="display-name-error" class="custom-error">
+                        {{form.password.errors}}
+                    </div>
+                    
+                    <!-- <div class="login__input-container">
                         <input 
                             type="password"
-                            name="password"
-                            placeholder="Password"
+                            name="password2"
+                            placeholder="Confirm Password"
                             required
-                            class="login__input" 
+                            class="login__input"
+                            id="password2" 
                         />
-                        <!-- <a href="#" class="login__form-link">Forgot?</a> -->
                     </div>
-                    <div class="login__input-container">
-                        {{error}}
+                    <div id="display-name-error" class="custom-error">
+                        {{form.display_name.errors}}
+                    </div> -->
+                    
                     </div>
                     <div class="login__input-container">
                         <input
                             type="submit"
-                            value="Log in"
+                            value="Register"
                             class="login__input login__input--btn"
                         />
                     </div>
                 </form>
-                
+            
             </div>
             <div class="login__section login__sign-up">
                 <span class="login__text">
-                    Don't have an account? 
-                    <a href="{% url 'register' %}" class="login__link">
-                        Sign up
+                    Already have an account? 
+                    <a href="{% url 'login' %}" class="login__link">
+                        Log in
                     </a>
                 </span>
             </div>
@@ -84,3 +102,14 @@
         </section>
     </main>
 {%endblock%}
+
+{% block javascript %}
+<script>
+
+    $(document).ready(function(){
+        $('#register-form').on('submit', function(){
+            console.log('do something with this code')
+        })
+    })
+</script>
+{% endblock %}

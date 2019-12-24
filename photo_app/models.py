@@ -10,6 +10,12 @@ class PhotoModel(models.Model):
     uploaded_by = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='uploaded_photos')
     liked_by = models.ManyToManyField(UserModel, related_name='liked_photos', blank=True, null=True)
     
+    def photo_url(self):
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
+        else:
+            return ''
+
     class Meta:
         verbose_name_plural = 'Photos'
 

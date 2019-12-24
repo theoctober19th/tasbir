@@ -6,90 +6,58 @@
             <header class="profile-form__header">
                 <div class="profile-form__avatar-container">
                     <img 
-                        src="{{user.profile_pic.url}}"
+                        src="{{user.profile_pic_url}}"
                         class="profile-form__avatar"
                     />
                 </div>
                 <h4 class="profile-form__title">Edit your profile</h4>
             </header>
-            <form method="POST" class="edit-profile__form">
+            <form method="POST" class="edit-profile__form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="edit-profile__form-row">
                     <label for="name" class="edit-profile__label">Name
                     </label>
-                    <input 
-                        id="name"
-                        type="text"
-                        value="{{user.display_name}}"
-                        class="edit-profile__input"
-                        name="display_name"
-                    />
+                    {{form.display_name}}
                 </div>
                 <div class="edit-profile__form-row">
                     <label for="username" class="edit-profile__label">
                         Username
                     </label>
-                    <input 
-                        type="text"
-                        id="username"
-                        class="edit-profile__input"
-                        value="{{user.username}}"
-                        name="username"
-                    />
+                    {{form.username}}
                 </div>
                 <div class="edit-profile__form-row">
                     <label for="website" class="edit-profile__label">
                         Website
                     </label>
-                    <input
-                        type="url"
-                        id="website"
-                        class="edit-profile__input"
-                        value="{{user.website}}"
-                        name="website"
-                    />
+                    {{form.website}}
                 </div>
                 <div class="edit-profile__form-row">
                     <label for="bio" class="edit-profile__label">
                         Bio
                     </label>
-                    <textarea id="bio" class="edit-profile__textarea" name="bio">{{user.bio}}</textarea>
+                    {{form.bio}}
                 </div>
                 <div class="edit-profile__form-row">
                     <label for="email" class="edit-profile__label">
                         Email
                     </label>
-                    <input 
-                        type="email"
-                        class="edit-profile__input"
-                        id="email"
-                        value="{{user.email}}"
-                        name="email"
-                    />
-                </div>
-                <!-- <div class="edit-profile__form-row">
-                    <label for="phone-number" class="edit-profile__label">
-                        Phone Number
-                    </label>
-                    <input 
-                        type="text"
-                        class="edit-profile__input"
-                        id="phone-number"
-                    />
+                    {{form.email}}
                 </div>
                 <div class="edit-profile__form-row">
+                    <label for="phone-number" class="edit-profile__label">
+                        Profile Picture
+                    </label>
+                    {{form.profile_pic}}
+                </div>
+                <!-- <div class="edit-profile__form-row">
                     <label for="gender" class="edit-profile__label">Gender</label>
                     <select id="gender">
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="whatever">Whatever</option>
                     </select>
-                </div> -->
-                <div class="edit-profile__form-row">
-                    <span class="edit-profile__label">Similar Account Suggestions</span>
-                    <input type="checkbox" id="similar" checked>
-                    <label for="similar">Include your account when recommending similar accounts people might want to follow. <a href="#">[?]</a></label>
                 </div>
+                 -->
                 <div class="edit-profile__form-row">
                     <label class="edit-profile__label"></label>
                     <input type="submit" value="Submit">

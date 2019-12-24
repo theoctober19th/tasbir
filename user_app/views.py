@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import UserModel
+from .forms import RegisterForm, EditProfileForm
 
 # Create your views here.
 def login(request):
+    if 'user_id' in request.session:
+        return redirect('index')
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -33,20 +37,35 @@ def edit_profile(request):
     user = UserModel.objects.filter(id=userid).first()
     if user:
         if request.method == 'POST':
-            user.display_name = request.POST.get('display_name')
-            user.username = request.POST.get('username')
-            user.website = request.POST.get('website')
-            user.bio = request.POST.get('bio')
-            user.email = request.POST.get('email')
-            user.save()
+            form = EditProfileForm(request.POST, files=request.FILES, instance=user)
+            print(form.errors)
+            form.save()
+            
             request.session['username'] = user.username
             return redirect('profile', user.username)
 
         else:
+            form = EditProfileForm(instance=user)
             d = {
-                'user' : user
+                'user' : user,
+                'form': form
             }
             return render(request, 'user_app/edit_profile.html', d)
     else:
         return render(request, 'photo_app/404.html')
         
+def register(request):
+    if 'user_id' in request.session:
+        return redirect('index')
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        else:
+            print(form.errors)
+            return render(request, 'user_app/register.html', {'form': form})
+    else:
+        form = RegisterForm()
+        return render(request, 'user_app/register.html', {'form': form})

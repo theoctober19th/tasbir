@@ -137,8 +137,8 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
-if 'DATABASE_URL' in os.environ: #means heroku 
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config()}
+# if 'DATABASE_URL' in os.environ: #means heroku 
+#     import dj_database_url
+#     DATABASES = {'default': dj_database_url.config()}
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

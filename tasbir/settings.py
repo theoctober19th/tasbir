@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'tasbir.herokuapp.com',
+    'theoctober19th.pythonanywhere.com',
     'localhost',
     '127.0.0.1'
 ]
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'photo_app',
     'user_app',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

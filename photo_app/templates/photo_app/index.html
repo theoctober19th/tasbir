@@ -49,12 +49,19 @@
                     </span>
                     
                     <ul data-user-profile-link="{% url 'profile' user.username%}" data-username="{{user.username}}" data-photo-id="{{post.id}}" class="photo__comments">
-                        {% for comment in post.photo_comments.all %}
+                        {% for comment in post.photo_comments.all|slice:":5" %}
                         <li class="photo__comment">
                             <span class="photo__comment-author"><a href="{% url 'profile' comment.commented_by.username %}">{{comment.commented_by.username}}</a></span>
                             {{comment.text}}
                         </li>
                         {% endfor %}
+                        {% if post.photo_comments.all|length > 5 %}
+                            <a href="{% url 'detail' post.id %}">
+                                <li class="photo__comment">
+                                    View More Comments
+                                </li>
+                            </a>
+                        {% endif %}
                     </ul>
                     <span class="photo__time-ago">{{photo.timestamp}}</span>
                     <div class="photo__add-comment-container">

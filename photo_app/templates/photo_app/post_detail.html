@@ -1,9 +1,51 @@
 {% extends 'photo_app/base.html' %}
-
+{% load static %}
 {% block main_content %}
 <main class="edit-profile">
-    <section class="profile-form">
-        <img style="width: 100%; height: auto;" src="{{post.photo_url}}" >
+    <section class="post-detail-container">
+            <div class='post-detail-photo'>
+                <img class="detail-image" src="{{post.photo_url}}" >
+            </div>
+            <div class="post-detail-desc">
+                    <header class="photo__header">
+                        <div class="photo__header-column">
+                            <a href="{% url 'profile' post.uploaded_by.username %}">
+                                <img
+                                    class="photo__avatar"
+                                    src="{{post.uploaded_by.profile_pic_url}}"
+                                />
+                            </a>
+                        </div>
+                        <div class="photo__header-column">
+                            <a style="color: inherit;" href="{% url 'profile' post.uploaded_by.username %}"><span class="photo__username">{{post.uploaded_by.username}}</span></a>
+                            <span class="photo__location">{{post.location}}</span>
+                        </div>
+                    </header>
+                    <div class="photo__info">
+                        <ul class="post-detail-photo__comments">
+
+                            {% for comment in post.photo_comments.all %}
+                                <li class="photo__comment">
+                                    <a href="{% url 'profile' comment.commented_by.username %}" style="color: inherit;"><span class="photo__comment-author">{{comment.commented_by.username}}</span></a>{{comment.text}}
+                                </li>
+                            {% endfor %}
+                           
+                        </ul>
+                        <div class="photo__icons">
+                            <span class="photo__icon">
+                                <i class="fa fa-heart-o heart fa-lg"></i>
+                            </span>
+                            <span class="photo__icon">
+                                <i class="fa fa-comment-o fa-lg"></i>
+                            </span>
+                        </div>
+                        <span class="photo__likes">{{post.liked_by.all|length}} likes</span>
+                        <span class="photo__time-ago">{{post.timestamp}}</span>
+                        <div class="photo__add-comment-container">
+                            <textarea placeholder="Add a comment..." class="photo__add-comment"></textarea>
+                        </div>
+                    </div>
+            </div>
     </section>
 </main>
 {% endblock %}

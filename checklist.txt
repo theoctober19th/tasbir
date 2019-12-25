@@ -1,6 +1,6 @@
 Heroku Checklist
 
-1. Create a .gitignore file, and commit changes to the local git repository.
+1. Create a .gitignore file
 
 2. Install Heroku CLI for your machine from: https://devcenter.heroku.com/articles/heroku-cli#download-and-install
 
@@ -15,9 +15,9 @@ Heroku Checklist
 7. Create Procfile with this as content:
 web: gunicorn project_name.wsgi
 
-8. pip install gunicorn
+8. pip install dj_database_url
 
-9. pip install dj_database_url
+9. Install required libraries (whitenoise) and configure it.
 
 10. pip freeze -l > requirements.txt
 
@@ -33,8 +33,7 @@ if 'DATABASE_URL' in os.environ: #means heroku
     import dj_database_url
     DATABASES = {'default': dj_database_url.config()}
 
-
-15. Add psycopg2 to requirements.txt
+15. Add psycopg2, gunicorn to requirements.txt
 
 16. Commit all changes.
 

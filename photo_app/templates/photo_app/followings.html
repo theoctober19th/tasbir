@@ -8,32 +8,38 @@
     <main class="explore">
 
         {%if profiles|length == 0%}
-            <h1 style="font-size:large; font-weight:bold; text-align:center">{{username}} has no following</h1>
+            <h1 style="font-size:large; font-weight:bold; text-align:center">{{user.username}} has no following</h1>
         {% else %}
 
         <h1 style="font-size:larger; font-weight:bold; text-align:center; margin-bottom:20px;">Following</h1>
 
         <section class="people">
             <ul class="people__list">
-                {% for user in profiles %}
+                {% for eachuser in profiles %}
                     <li class="people__person">
                         <div class="people__column">
                             <div class="people__avatar-container">
-                                <a href="{% url 'profile' user.username %}">
+                                <a href="{% url 'profile' eachuser.username %}">
                                     <img 
-                                        src="{{user.profile_pic_url}}"
+                                        src="{{eachuser.profile_pic_url}}"
                                         class="people__avatar"
                                     />
                                 </a>
                             </div>
                             <div class="people__info">
-                                <a href="{% url 'profile' user.username %}"><span class="people__username">{{user.username}}</span></a>
-                                <span class="people__full-name">{{user.display_name}}</span>
+                                <a href="{% url 'profile' eachuser.username %}"><span class="people__username">{{eachuser.username}}</span></a>
+                                <span class="people__full-name">{{eachuser.display_name}}</span>
                             </div>
                         </div>
-                        <div class="people__column_a">
-                            <a href="#">Follow</a>
-                        </div>
+                        {% if eachuser in user.followings.all %}
+                            <div class="people__column_a">
+                                <a href="#" data-user-id="{{eachuser.id}}" class="follow-button unfollowbutton">Unfollow</a>
+                            </div>
+                        {% else %}
+                            <div class="people__column_a">
+                                <a href="#" data-user-id="{{eachuser.id}}" class=" follow-button followbutton">Follow</a>
+                            </div>
+                        {% endif %}
                     </li>
                 {%endfor%}
                 
@@ -41,4 +47,39 @@
         </section>
         {%endif%}
     </main>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        $('.follow-button').on('click', function(){
+            userid = $(this).attr('data-user-id');
+            button = $(this)
+            $.ajax({
+                type: 'POST',
+                url: `{% url 'ajax.follow' %}`,
+                data: {
+                    'userid': userid
+                },
+                success: function(response){
+                    if(response.success){
+                        switch(response.action){
+                            case 'followed':
+                                button.text('Unfollow')
+                                break;
+                            case 'unfollowed':
+                                button.text('Follow')
+                                break;
+                        }
+                        button.toggleClass('followbutton');
+                        button.toggleClass('unfollowbutton');
+                    }
+                },
+                error: function(response){
+                    console.log(response)
+                }
+            })
+        })
+    })
+</script>
 {% endblock %}

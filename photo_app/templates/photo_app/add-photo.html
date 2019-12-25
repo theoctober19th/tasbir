@@ -1,0 +1,39 @@
+{% extends 'photo_app/base.html' %}
+
+{% block main_content %}
+<main class="edit-profile">
+    <section class="profile-form">
+        <header class="profile-form__header">
+            <div class="profile-form__avatar-container">
+                <img 
+                    src="{{user.profile_pic.url}}"
+                    class="profile-form__avatar"
+                />
+            </div>
+            <h4 class="profile-form__title">Add new photo</h4>
+        </header>
+        <form method="POST" class="edit-profile__form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="edit-profile__form-row">
+                <label for="photo" class="edit-profile__label">Photo
+                </label>
+                {{form.photo}}
+            </div>
+            <div class="edit-profile__form-row">
+                <label for="location" class="edit-profile__label">
+                    Location
+                </label>
+                {{form.location}}
+            </div>
+            <div class="edit-profile__form-row">
+                {{form.errors}}
+            </div>
+            
+            <div class="edit-profile__form-row">
+                <label class="edit-profile__label"></label>
+                <input type="submit" value="Add Photo">
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import PhotoModel, CommentModel
 from user_app.models import UserModel
 from django.views.decorators.csrf import csrf_exempt
+from .forms import AddNewPostForm
 
 from faker import Faker
 
@@ -21,11 +22,17 @@ def profile(request, username):
 
     if user is None:
         return render(request, 'photo_app/404.html')
+    
+    currentuser = None
+    if 'user_id' in request.session:
+        userid = request.session.get('user_id')
+        currentuser = UserModel.objects.filter(id=userid).first()
         
     posts = PhotoModel.objects.filter(uploaded_by = user).order_by('-timestamp')[:10]
     context = {
         'user': user,
-        'posts': posts
+        'posts': posts,
+        'currentuser': currentuser
     }
     return render(request, 'photo_app/profile.html', context)
 
@@ -110,20 +117,20 @@ def search(request):
         return redirect('login')
 
     userid = request.session.get('user_id', None)
+    user = UserModel.objects.filter(id=userid).first()
     
-    if request.method == 'GET':
-        query = request.GET.get('q', None)
-        if query:
-            d = {
-                'profiles': UserModel.objects.filter(username__icontains=query).exclude(id=userid),
-                'query': query
-            }
-            return render(request, 'photo_app/search_results.html', d)
-        else:
-            return redirect('index')    
-    else:
-        return redirect('index')
-
+    if user:
+        if request.method == 'GET':
+            query = request.GET.get('q', None)
+            if query:
+                d = {
+                    'profiles': UserModel.objects.filter(username__icontains=query).exclude(id=userid),
+                    'query': query,
+                    'user': user
+                }
+                return render(request, 'photo_app/search_results.html', d)
+    #something is not right
+    return redirect('index')
 
 def explore(request):
     if 'user_id' not in request.session:
@@ -133,7 +140,8 @@ def explore(request):
     user = UserModel.objects.filter(id=userid).first()
     recommendations = UserModel.objects.exclude(id__in=user.followings.all()).exclude(id=userid)
     context = {
-        'profiles': recommendations
+        'profiles': recommendations,
+        'user': user
     }
     return render(request, 'photo_app/explore.html', context)
 
@@ -142,7 +150,7 @@ def followers(request, username):
     user = UserModel.objects.filter(username=username).first()
     if user:
         followers_list = user.followers.all()
-        context = {'profiles': followers_list, 'username': username}
+        context = {'profiles': followers_list, 'user': user}
         return render(request, 'photo_app/followers.html', context)
     else:
         return render(request, 'photo_app/404.html')
@@ -152,7 +160,7 @@ def followings(request, username):
     user = UserModel.objects.filter(username=username).first()
     if user:
         followings_list = user.followings.all()
-        context = {'profiles': followings_list, 'username': username}
+        context = {'profiles': followings_list, 'user': user}
         return render(request, 'photo_app/followings.html', context)
     else:
         return render(request, 'photo_app/404.html')
@@ -166,3 +174,64 @@ def detail(request, postid):
         return render(request, 'photo_app/post_detail.html', context)
     else:
         return render(request, 'photo_app/404.html')
+
+def addphoto(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    userid = request.session.get('user_id')
+    user = UserModel.objects.filter(id=userid).first()
+
+    if user:
+        if request.method == 'POST':
+            form = AddNewPostForm(data=request.POST, files=request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.uploaded_by = user
+                post.save()
+                return redirect('profile', user.username)
+            else:
+                return render(request, 'photo_app/add-photo.html', {'form': form})
+        else:
+            form = AddNewPostForm()
+            d = {
+                'form': form,
+                'user': user
+            }
+            return render(request, 'photo_app/add-photo.html', d)
+    else:
+        return redirect('index')
+
+def delete_photo(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
+    userid = request.session.get('user_id')
+    if request.method == 'POST':
+        postid = request.POST.get('postid', None)
+        if postid:
+            post = PhotoModel.objects.filter(id=postid, uploaded_by=userid).first()
+            if post:
+                post.delete()
+    
+    return redirect('index')
+
+@csrf_exempt
+def ajaxfollow(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    
+    userid = request.session.get('user_id')
+    currentuser = UserModel.objects.filter(id=userid).first()
+    if currentuser:
+        if request.method == 'POST':
+            otheruid = request.POST.get('userid', None)
+            otheruser = UserModel.objects.filter(id=otheruid).first()
+            if otheruser:
+                if currentuser in otheruser.followers.all():
+                    otheruser.followers.remove(currentuser)
+                    return JsonResponse({'success': 'true', 'action': 'unfollowed'})
+                else:
+                    otheruser.followers.add(currentuser)
+                    return JsonResponse({'success': 'true', 'action': 'followed'})
+    #if something is wrong
+    return JsonResponse({'success': 'false'})

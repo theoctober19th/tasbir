@@ -4,7 +4,11 @@
 <main class="edit-profile">
     <section class="post-detail-container">
             <div class='post-detail-photo'>
-                <img class="detail-image" src="{{post.photo_url}}" >
+                <img 
+                    data-photo-id="{{post.id}}"
+                    class="detail-image" 
+                    src="{{post.photo_url}}" 
+                >
             </div>
             <div class="post-detail-desc">
                     <header class="photo__header">
@@ -22,7 +26,7 @@
                         </div>
                     </header>
                     <div class="photo__info">
-                        <ul class="post-detail-photo__comments">
+                        <ul data-user-profile-link="{% url 'profile' user.username%}" data-username="{{user.username}}" data-photo-id="{{post.id}}" class="photo__comments">
 
                             {% for comment in post.photo_comments.all %}
                                 <li class="photo__comment">
@@ -33,19 +37,108 @@
                         </ul>
                         <div class="photo__icons">
                             <span class="photo__icon">
-                                <i class="fa fa-heart-o heart fa-lg"></i>
+                                <i 
+                                data-photo-id="{{post.id}}"
+                                {% if user not in post.liked_by.all %}
+                                    class="fa fa-heart-o heart fa-lg"
+                                {% else %}
+                                    class="fa heart-red fa-heart heart fa-lg"
+                                {% endif %}
+                                ></i>
                             </span>
                             <span class="photo__icon">
                                 <i class="fa fa-comment-o fa-lg"></i>
                             </span>
                         </div>
-                        <span class="photo__likes">{{post.liked_by.all|length}} likes</span>
+                        <span data-likes="{{post.liked_by.all|length}}" class="photo__likes" data-photo-id="{{post.id}}">{{post.liked_by.all|length}} likes</span>
                         <span class="photo__time-ago">{{post.timestamp}}</span>
                         <div class="photo__add-comment-container">
-                            <textarea placeholder="Add a comment..." class="photo__add-comment"></textarea>
+                            <textarea data-photo-id="{{post.id}}" placeholder="Add a comment..." class="photo__add-comment"></textarea>
                         </div>
                     </div>
             </div>
     </section>
 </main>
 {% endblock %}
+
+{%block javascript %}
+<script>
+    $(document).ready(function(){
+        var heart = $('.heart');
+        var photo = $('.detail-image');
+
+        function likeordislike(postid){
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ajax.likephoto' %}",
+                data: {
+                    'postid': postid
+                },
+                success: function(response){
+                    likestr = $(`span[data-photo-id='${postid}']`).attr('data-likes');
+                    likes = parseInt(likestr);
+                    liketext = $(`span[data-photo-id='${postid}']`);
+                    switch(response.action){
+                        case 'liked':
+                            likes = likes + 1
+                            liketext.attr('data-likes', likes)
+                            liketext.text(likes.toString() + ' likes')
+                            break;
+                        case 'disliked':
+                            likes = likes - 1
+                            liketext.attr('data-likes', likes)
+                            liketext.text(likes.toString() + ' likes')
+                            break;
+                    }
+                    hearticon = $(`i[data-photo-id='${postid}']`)
+                    hearticon.toggleClass('fa-heart-o');
+                    hearticon.toggleClass('heart-red fa-heart');
+                },
+                error: function(response){
+                    console.log(response)
+                }
+            })
+            
+        }
+
+        heart.click(function(){
+            var postid = $(this).attr('data-photo-id')
+            likeordislike(postid);
+        })
+
+        photo.dblclick(function(){
+            var postid = $(this).attr('data-photo-id')
+            likeordislike(postid)
+        })
+
+        $('textarea').keyup(function(e){
+            if(e.keyCode == 13){
+                var postid = $(this).attr('data-photo-id')
+                var text = $(this).val()
+                console.log(postid)
+                console.log(text)
+                $(this).val('')
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'ajax.comment' %}",
+                    data: {
+                        postid: postid,
+                        text: text
+                    },
+                    success : function(response){
+                        list = $(`ul[data-photo-id=${postid}]`)
+                        username = list.attr('data-username')
+                        link = list.attr('data-user-profile-link')
+                        list.append(`<li class="photo__comment"> <span class="photo__comment-author"><a style="color: inherit;" href="${link}">${username}</a></span>${text}</li>`)
+                        console.log(response)
+                    },
+                    error: function(response){
+                        console.log(response)
+                    }
+                })
+            }
+        })
+    })
+</script>
+{%endblock%}

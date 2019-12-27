@@ -166,10 +166,16 @@ def followings(request, username):
         return render(request, 'photo_app/404.html')
 
 def detail(request, postid):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
+    userid = request.session.get('user_id', None)
+    user = UserModel.objects.filter(id=userid).first()
     photo = PhotoModel.objects.filter(id=postid).first()
-    if photo:
+    if photo and user:
         context = {
-            'post': photo
+            'post': photo,
+            'user': user,
         }
         return render(request, 'photo_app/post_detail.html', context)
     else:

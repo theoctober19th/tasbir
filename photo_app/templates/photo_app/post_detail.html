@@ -49,6 +49,11 @@
                             <span class="photo__icon">
                                 <i class="fa fa-comment-o fa-lg"></i>
                             </span>
+                            {% if user == post.uploaded_by %}
+                                <span class="photo__icon">
+                                    <a href="{% url 'delete' post.id %}"><i style="color: red;" class="fa fa-trash fa-lg"></i></a>
+                                </span>
+                            {% endif %}
                         </div>
                         <span data-likes="{{post.liked_by.all|length}}" class="photo__likes" data-photo-id="{{post.id}}">{{post.liked_by.all|length}} likes</span>
                         <span class="photo__time-ago">{{post.timestamp}}</span>

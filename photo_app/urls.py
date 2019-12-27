@@ -10,6 +10,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('explore/', views.explore, name='explore'),
     path('posts/<int:postid>', views.detail, name='detail'),
+    path('delete/<int:postid>', views.delete_photo, name='delete'),
     path('<str:username>/followers', views.followers, name='followers'),
     path('<str:username>/followings', views.followings, name='followings'),
     path('ajax/likephoto/', views.ajaxlike, name='ajax.likephoto'),

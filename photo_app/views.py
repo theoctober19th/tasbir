@@ -207,17 +207,14 @@ def addphoto(request):
     else:
         return redirect('index')
 
-def delete_photo(request):
+def delete_photo(request, postid):
     if 'user_id' not in request.session:
         return redirect('login')
 
     userid = request.session.get('user_id')
-    if request.method == 'POST':
-        postid = request.POST.get('postid', None)
-        if postid:
-            post = PhotoModel.objects.filter(id=postid, uploaded_by=userid).first()
-            if post:
-                post.delete()
+    post = PhotoModel.objects.filter(id=postid, uploaded_by=userid).first()
+    if post:
+        post.delete()
     
     return redirect('index')
 

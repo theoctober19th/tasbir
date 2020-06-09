@@ -6,6 +6,9 @@ Tasbir is an Instagram clone web application written in Python using Django Fram
 * HTML
 * CSS
 
+### Credit
+I have used the HTML Instagram template developed by `serranorevalo` for this project. Here is the link to the repo: https://github.com/serranoarevalo/instaclone
+
 ### Instructions
 
 1. Create a virtual environment and then activate it.  
